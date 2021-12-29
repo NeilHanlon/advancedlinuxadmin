@@ -1,0 +1,29 @@
+dnf -y upgrade
+dnf install iputils lsof openssh-server  sudo tcpdump python3
+echo "kernel.printk='4 1 7 4'" >> /etc/sysctl.conf
+ip a
+dnf -y install git-core
+systemctl stop firewalld
+systemctl mask firewalld
+sed -i 's/enforcing/disabled/' /etc/sysconfig/selinux
+dnf -y install git wget python36
+pip3 install virtualenv
+vim .ssh/authorized_keys 
+cd /etc/sysconfig/network-scripts/
+ls
+ip a
+cp ifcfg-enp11s0 ifcfg-br-mgmt
+vim ifcfg-br-mgmt
+vim ifcfg-enp11s0 
+cp ifcfg-enp10s0 ifcfg-br-storage
+vim ifcfg-enp10s0 ifcfg-br-storage
+cp ifcfg-enp9s0 ifcfg-br-vxlan
+vim ifcfg-enp9s0 ifcfg-br-vxlan
+systemctl restart network
+lxc-ls
+vim /etc/sysctl.conf 
+ip addr show br-storage
+reboot
+touch /etc/cloud/cloud-init.disabled
+ip a
+ping -I br-storage 172.29.228.5

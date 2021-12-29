@@ -1,0 +1,75 @@
+lsblk
+df -h
+hostnamectl set-hostname --static ala-storage1
+df -h
+lsblk
+pvcreate --metadatasize 2048 /dev/vdb
+vgcreate cinder-volumes /dev/vdb
+ip a
+dnf -y install git-core
+systemctl stop firewalld
+systemctl mask firewalld
+sed -i 's/enforcing/disabled/' /etc/sysconfig/selinux
+dnf -y install git wget python36
+vim .ssh/authorized_keys 
+ip a
+journalctl -xe 
+cat .ssh/authorized_keys 
+vim .ssh/authorized_keys 
+vim /etc/ssh/sshd_config 
+systemctl restart sshd
+htop
+top
+cd /etc/sysconfig/network-scripts/
+ls
+ls -altr
+ip a
+cp ifcfg-enp7s0 ifcfg-br-mgmt
+vim ifcfg-br-mgmt
+vim ifcfg-enp7s0 
+cp ifcfg-enp6s0 ifcfg-br-storage
+vim ifcfg-br-storage
+vim ifcfg-enp6s0 
+vim ifcfg-br-storage
+systemctl restart network
+ip a
+top
+ps aux | grep rpm
+ps aux | grep dnf
+ps aux | grep rpm
+less +F /tmp/ansible.wa_q_9q7hardening/rpmverify.txt
+ps aux 
+ps aux  | grep rpm
+man rpm
+top
+ps aux | grep rpm
+less +F /tmp/ansible.wa_q_9q7hardening/rpmverify.txt
+tail -f /tmp/ansible.wa_q_9q7hardening/rpmverify.txt
+vim /etc/sysctl.conf 
+ip a
+ping 172.29.220.11
+tracepath 172.29.220.11
+ip neigh show
+ip a
+up
+uptime 
+reboot
+cat /etc/hosts
+i pa
+ip a
+ip a | grep 228
+touch IPADDR=172.29.228.5
+NETMASK=255.255.252.0
+rm IPADDR\=172.29.228.5 
+touch /etc/cloud/cloud-init.disabled
+systemctl status cinder.service
+systemctl status cinder-volume
+systemctl restart cinder-volume
+systemctl status cinder-volume
+journalctl -xeu
+journalctl -xe
+sed -i 's/enforcing/disabled/' /etc/sysconfig/selinux
+getenforce 
+setenforce 0
+systemctl restart cinder-volume
+systemctl status cinder-volume

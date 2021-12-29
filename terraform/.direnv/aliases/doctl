@@ -3,4 +3,4 @@ doctl ()
 { 
     /home/neil/bin/doctl --context advancedlsa $@
 }
-doctl
+doctl $@

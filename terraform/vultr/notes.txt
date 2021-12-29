@@ -1,0 +1,87 @@
+cat << EOF > ifcfg-br-mgmt
+BOOTPROTO=none
+DEVICE=br-mgmt
+NM_CONTROLLED=no
+IPADDR=172.29.220.7
+NETMASK=255.255.252.0
+ONBOOT=yes
+TYPE=Bridge
+USERCTL=no
+EOF
+
+#cat << EOF > ifcfg-br-mgmt\:10
+#DEVICE=br-mgmt:10
+#ONPARENT=on
+#IPADDR=172.29.220.10
+#PREFIX=22
+#EOF
+#
+#cat << EOF > ifcfg-br-mgmt\:11
+#DEVICE=br-mgmt:11
+#ONPARENT=on
+#IPADDR=172.29.220.11
+#PREFIX=22
+#EOF
+
+cat << EOF > ifcfg-br-storage
+BOOTPROTO=none
+DEVICE=br-storage
+IPADDR=172.29.228.7
+NETMASK=255.255.252.0
+NM_CONTROLLED=no
+ONBOOT=yes
+TYPE=Bridge
+USERCTL=no
+EOF
+
+#cat << EOF > ifcfg-br-vxlan
+#BOOTPROTO=none
+#DEVICE=br-vxlan
+#IPADDR=172.29.224.6
+#NETMASK=255.255.252.0
+#NM_CONTROLLED=no
+#ONBOOT=yes
+#TYPE=Bridge
+#USERCTL=no
+#EOF
+
+#cat << EOF > ifcfg-enp7s0
+#TYPE=Ethernet
+#DEVICE=enp7s0
+#ONBOOT=yes
+#BRIDGE=br-vxlan
+#HWADDR=5a:01:03:aa:e3:d0
+#EOF
+
+#cat << EOF > ifcfg-enp8s0
+#TYPE=Ethernet
+#DEVICE=enp8s0
+#ONBOOT=yes
+#BRIDGE=br-storage
+#HWADDR=5a:02:03:aa:e3:d0
+#EOF
+#
+#cat << EOF > ifcfg-enp9s0
+#TYPE=Ethernet
+#DEVICE=enp9s0
+#ONBOOT=yes
+#BRIDGE=br-mgmt
+#HWADDR=5a:00:03:aa:e3:d0
+#EOF
+
+
+cat << EOF > ifcfg-enp6s0
+TYPE=Ethernet
+DEVICE=enp6s0
+ONBOOT=yes
+BRIDGE=br-storage
+HWADDR=5a:01:03:aa:e3:1c
+EOF
+
+cat << EOF > ifcfg-enp7s0
+TYPE=Ethernet
+DEVICE=enp7s0
+ONBOOT=yes
+BRIDGE=br-mgmt
+HWADDR=5a:00:03:aa:e3:1c
+EOF

@@ -1,0 +1,382 @@
+ip a
+top
+uptime 
+lxc-ls 
+lxc-top 
+lxc-info 
+lxc-ls
+lxc-info infra1_rabbit_mq_container-3f6cfa0e
+lxc-ls | grep tmp
+lxc-monitor 
+journalctl -xe
+nmcli con show
+cd /etc/sysconfig/network-scripts/
+ls
+vim ifcfg-enp7s0 
+ls
+vim ifcfg-br-bxlan 
+vim ifcfg-enp7s0 
+ifdown enp7s0
+ifup br-vxlan
+ip a
+ifup enp7s0
+ip a
+ls
+cp ifcfg-enp8s0 ifcfg-br-mgmt
+vim ifcfg-br-mgmt
+vim ifcfg-enp8s0 
+systemctl restart network
+ip a
+ssh 172.29.220.3
+rm /tmp/ssh-XqeHHU2LKt/agent.106074 
+ssh 172.29.220.3
+ssh 172.29.220.4
+lxc-ls 
+lxc-top
+top
+nproc
+top
+ssh 172.29.220.4
+ssh 172.29.220.5
+ssh 172.29.220.3
+ssh 172.29.220.4
+ssh 172.29.220.3
+ssh 172.29.220.3
+cd /opt/openstack-ansible/playbooks/
+openstack-ansible setup-infrastructure.yml --syntax-check
+openstack-ansible setup-hosts.yml
+cd /etc/op
+cd /etc/open
+cd /etc/openstack_deploy/
+ls
+vim openstack_user_config.yml
+openstack-ansible setup-hosts.yml
+ls
+cd -
+openstack-ansible setup-hosts.yml
+ip a
+export PATH=$PATH:/usr/bin
+dnf -y upgrade
+dnf -y install git-core
+systemctl stop firewalld
+systemctl mask firewalld
+sed -i 's/enforcing/disabled/' /etc/sysconfig/selinux
+dnf -y install git wget python36
+pip3 install virtualenv
+git clone https://github.com/NeilHanlon/openstack-ansible.git /opt/openstack-ansible
+cd /opt/openstack-ansible && git checkout feature/rocky8
+/opt/openstack-ansible/scripts/bootstrap-ansible.sh
+ls
+cp -ra etc/openstack_deploy/ /etc/
+cd /etc/openstack_deploy/
+ls 
+ls ~/
+ls /
+ls /root/
+vim user_lxc.yml
+cp openstack_user_config.yml.example openstack_user_config.yml
+vim openstack_user_config.yml
+rm -fr openstack_user_config.yml
+vim openstack_user_config.yml
+vim ~/.vimrc
+vim openstack_user_config.yml
+vim ~/.vimrc
+vim openstack_user_config.yml
+vim /etc/openstack_deploy/user_variables.yml
+ls
+vim conf.d/neutron.yml.aio 
+ag 'neutron' .
+grep -ri --color neutron .
+grep -ri --color neutron . | grep vlan
+vim openstack_user_config.yml.example 
+vim openstack_user_config.yml
+vim user_variables.yml
+vim user_secrets.yml 
+cd /opt/openstack-ansible
+./scripts/pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
+cd -
+vim user_secrets.yml
+cd
+ssh-keygen
+cat .ssh/id_rsa
+cat .ssh/id_rsa.pub 
+ssh 172.29.220.3
+ssh -i .ssh/id_rsa 172.29.220.3
+ssh 172.29.220.3
+ssh 172.29.220.3 -vvv
+ssh -i .ssh/id_rsa 172.29.220.3
+ssh -i .ssh/id_rsa 172.29.220.3 -vvv
+rm /tmp/ssh-BTW4jLYXFM/agent.30808 
+ssh -i .ssh/id_rsa 172.29.220.3 -vvv
+ssh -i .ssh/id_rsa 172.29.220.4
+ssh -i .ssh/id_rsa 172.29.220.3
+ssh -i .ssh/id_rsa 172.29.220.5
+ip link show enp9s0
+uptime 
+ip a
+cd /etc/sysconfig/network-scripts/
+ls
+ip a
+ip a | grep 172.29
+ls
+ip addr show
+ip link show
+ls
+mv ifcfg-br-bxlan ifcfg-br-vxlan
+vim ifcfg-br-vxlan
+cp ifcfg-br-vxlan ifcfg-br-storage
+vim ifcfg-br-storage
+cp ifcfg-enp8s0 ifcfg-enp9s0
+vim ifcfg-enp9s0
+ifup enp9s0
+ifup br-storage
+ip a
+vim ifcfg-br-storage 
+ip a
+ip addr show br0storage
+ip addr show br-storage
+ifdown br-storage
+ifdown enp9s0
+ls
+ls -altr
+cat ifcfg-br-storage 
+ip addr show br-mgmt
+ip addr show br-vxlan
+ssh 172.29.220.3
+rm /tmp/ssh-*/*.agent
+rm -fr /tmp/ssh-*
+ssh 172.29.220.3
+ssh 172.29.220.4
+vim ifcfg-br-storage 
+ifdown br-storage
+ifup br-storage
+ifup enp9s0
+ip a
+ping 172.29.228.3 -i br-storage
+ping 172.29.228.3 -I br-storage
+cd /etc/sysconfig/network-scripts/
+cp ifcfg-br-mgmt ifcfg-br-mgmt\:1
+vim ifcfg-br-mgmt\:1
+mv ifcfg-br-mgmt\:1 ifcfg-br-mgmt\:10
+vim ifcfg-br-mgmt\:10
+cat ifcfg-br-mgmt*
+ifup br-mgmt:10
+ifup br-mgmt:11
+lxc-top
+cd /opt/openstack-ansible/playbooks/
+openstack-ansible setup-hosts.yml
+rmf -fr /tmp/ssh-arhi2944df/*
+rmf -fr /tmp/ssh-arhi2944df/
+rm -fr /tmp/ssh-arhi2944df/
+openstack-ansible setup-hosts.yml
+openstack-ansible setup-infrastructure.yml
+journalctl -xe
+ip addr | grep 172.29.220.10
+ip addr | grep 172.29.220.11
+cd /etc/openstack_deploy/
+ls
+vim openstack_user_config.yml
+openstack-ansible setup-infrastructure.yml
+cd -
+openstack-ansible setup-infrastructure.yml
+vim /etc/openstack_deploy/openstack_user_config.yml
+ip r s
+ip a
+ip a | grep 220
+ping 172.29.220.11
+vim /etc/openstack_deploy/openstack_user_config.yml
+curl http://172.29.220.11:8181/constraints/upper_constraints_a0d5baa46432649d799893ed7300fe78bd3a5e09.txt"
+curl http://172.29.220.11:8181/constraints/upper_constraints_a0d5baa46432649d799893ed7300fe78bd3a5e09.txt
+ss -tulpn | grep 172.29.220.11
+netstat -tulpn | grep 172.29.220.11
+netstat -tulpn | grep 8181
+openstack-ansible setup-hosts.yml
+uptime 
+reboot 
+cd /opt/openstack-ansible/
+ls
+cd playbooks/
+netstat -tulpn | grep 8181
+openstack-ansible setup-hosts.yml
+cd /opt/openstack-ansible/playbooks/
+openstack-ansible setup-infrastructure.yml 
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+openstack-ansible setup-openstack.yml
+cd /opt/openstack-ansible/playbooks/
+openstack-ansible setup-openstack.yml
+lxc-ls
+lxc-attach infra1_glance_container-38c0e415
+lxc-start infra1_glance_container-38c0e415
+lxc-start --help
+lxc-start -F infra1_glance_container-38c0e415
+journalctl -xe
+ ip r s
+ip a
+ip link show 
+ip addr show br-storage
+cd /etc/sysconfig/network-scripts/
+ls
+vim ifcfg-br-storage 
+systemctl restart network
+journalctl -xe
+ip addr show br-storage
+ifdown br-storage
+ifup br-storage
+ifdown br-storage
+ifup br-storage & 
+ip addr show br-storage
+cat ifcfg-enp9s0 
+ip link show enp9s0
+ip a
+ip link
+dmesg | grep enp
+cat ifcfg-br-storage 
+cat ifcfg-br-mgmt
+reboot
+ip addr show enp9s0
+ip a
+reboot
+cd /opt/openstack-ansible/playbooks/
+openstack-ansible setup-openstack.yml
+ssh 172.29.220.5
+ip r s
+ip addr show br-mgmt
+cd /etc/sysconfig/network-scripts/
+ls
+ip addr show
+uptime 
+ipa
+ip link
+vim ifcfg-br-mgmt
+vim ifcfg-br-vxlan 
+vim ifcfg-br-mgmt
+vim ifcfg-br-storage 
+ip link show
+dmesg | grep enp
+ifup br-storage
+vim ifcfg-br-storage ifcfg-enp9s0 
+vim ifcfg-br-mgmt ifcfg-enp7s0 
+vim ifcfg-br-mgmt ifcfg-enp8s0 
+vim ifcfg-br-vxlan ifcfg-enp7s0 
+systemctl restart netwrok
+systemctl restart network
+ip a
+dmesg | grep br
+dmesg | grep br-
+dmesg | grep renamed
+cd /etc/sysconfig/network-scripts/
+vim ifcfg-enp8s0 ifcfg-br-mgmt
+ls /etc/cloud/cloud-init.disabled
+ls /etc/cloud/
+touch /etc/cloud/cloud-init.disabled
+vim ifcfg-br-mgmt ifcfg-enp8s0 
+vim /etc/openstack_deploy/openstack_user_config.yml
+vim ifcfg-br-mgmt ifcfg-enp8s0 
+vim /etc/openstack_deploy/openstack_user_config.yml
+vim ifcfg-br-mgmt ifcfg-enp8s0 
+vim ifcfg-br-storage ifcfg-enp9s0 
+ifdown br-storage
+ifdown enp9s0
+ifup enp9s0
+ifup br-storage
+cat ifcfg-br-storage 
+vim ifcfg-br-storage 
+vim ifcfg-br-vxlan 
+vim ifcfg-br-mgmt
+ifup br-storage
+ifdown br-mgmt 
+ifup br-mgmt
+cat ifcfg-br-mgmt
+cat ifcfg-enp7s0 
+cat ifcfg-enp8
+cat ifcfg-enp8s0 
+ifdown enp8s0
+reboot
+ip a
+dmesg | grep rename
+cd /etc/sysconfig/network-scripts/
+cat ifcfg-br-mgmt
+cat ifcfg-enp8s0 
+cat ifcfg-enp7s0 
+cat ifcfg-br-vxlan 
+cat ifcfg-br-mgmt
+vim ifcfg-br-mgmt
+vim ifcfg-br-storage 
+vim ifcfg-br-vxlan ifcfg-enp7s0 
+ls
+vim ifcfg-br-mgmt\:11 
+ifdown br-mgmt:11
+vim ifcfg-br-mgmt\:11 
+ifdown br-mgmt:11
+vim ifcfg-br-mgmt\:11 
+ifdown br-mgmt:11
+ifup br-mgmt:11
+ifup br-mgmt
+ip a
+ip addr show br-mgmt
+ip addr show br-mgmt:10
+ifup br-mgmt:10
+ip addr show br-mgmt:10
+ifup br-mgmt
+ifdown br-mgmt
+ip addr show br-mgmt:10
+reboot
+uptime 
+ip a
+cd /etc/sysconfig/network-scripts/
+ls
+grep HWADDR .
+grep -ri HWADDR .
+grep -r HWADDR .
+grep -rE ^HWADDR .
+vim ifcfg-enp9s0 
+vim ifcfg-br-storage 
+vim ifcfg-br-vxlan 
+vim ifcfg-br-mgmt
+reboot
+ip addr
+dmesg | grep rename
+cd /etc/sysconfig/network-scripts/
+grep -ri 'enp8' .
+vim ifcfg-enp8s0 
+cat ifcfg-enp8s0 ifcfg-enp7s0 
+mv ifcfg-br-mgmt\:1* ../
+ls
+reboot
+ip a
+dmesg | grep rename
+vim /etc/network/interfaces.d/
+vim /etc/udev/rules.d/70-persistent-net.rules 
+reboot
+vim /etc/udev/rules.d/70-persistent-net.rules 
+dmesg | grep rename
+ip a
+mv /etc/sysconfig/ifcfg-br-mgmt\:1* /etc/sysconfig/network-scripts/
+reboot
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+cd /opt/openstack-ansible/playbooks/
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+ip a
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+lxc-ls
+lxc-top
+top
+lxc-top
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+openstack-ansible setup-openstack.yml
+ansible galera_container -m shell   -a "mysql -h localhost -e 'show status like \"%wsrep_cluster_%\";'"
+openstack-ansible setup-openstack.yml
+cat /etc/openstack_deploy/user_variables.yml
+cd /etc/openstack_deploy/
+ls
+ls -altr
+cat openstack_user_config.yml
+pwd
+cd /etc/sysconfig/network-scripts/
+ls
+cat ifcfg-br-*
+for i in ifcfg*; do echo $i; echo; cat $i; done;
+for i in ifcfg*; do echo ################## $i; echo; cat $i; done;
+for i in ifcfg*; do echo '##################' $i; echo; cat $i; done;
+for i in ifcfg*; do echo '##################' $i; echo; cat $i; echo; done;
