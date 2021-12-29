@@ -2,8 +2,8 @@ resource "vultr_instance" "infra1" {
   plan                = "vdc-2c-8gb"
   region              = "ewr"
   os_id               = "448"
-  label               = "advancedlsa infra controlplane"
-  tag                 = "advancedlsa"
+  label               = "infra1"
+  tag                 = "advancedlsa infra"
   hostname            = "ala-infra1"
   enable_ipv6         = false
   backups             = "disabled"
@@ -18,8 +18,8 @@ resource "vultr_instance" "compute1" {
   plan                = "vdc-2c-8gb"
   region              = "ewr"
   os_id               = "448"
-  label               = "advancedlsa compute"
-  tag                 = "advancedlsa"
+  label               = "compute1"
+  tag                 = "advancedlsa compute"
   hostname            = "ala-compute1"
   enable_ipv6         = false
   backups             = "disabled"
@@ -34,8 +34,8 @@ resource "vultr_instance" "storage1" {
   plan                = "vc2-4c-8gb"
   region              = "ewr"
   os_id               = "448"
-  label               = "advancedlsa storage"
-  tag                 = "advancedlsa"
+  label               = "storage1"
+  tag                 = "advancedlsa storage"
   hostname            = "ala-storage1"
   enable_ipv6         = false
   backups             = "disabled"

@@ -1,0 +1,5 @@
+# Variables for our common module for RedHat
+---
+
+bin_su: /usr/bin/su
+bin_sudo: /usr/bin/sudo

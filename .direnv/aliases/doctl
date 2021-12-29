@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+doctl () 
+{ 
+    /home/neil/bin/doctl --context advancedlsa $@
+}
+doctl $@
