@@ -63,6 +63,7 @@ if [[ "${HOSTNAME}" =~ "storage" ]]; then
   let hostpart='7'
 fi
 
+if [[ ! -z "${iface_mgmt}" ]]; then
 cat << EOF > ifcfg-br-mgmt
 BOOTPROTO=none
 DEVICE=br-mgmt
@@ -81,7 +82,7 @@ ONBOOT=yes
 BRIDGE=br-mgmt
 HWADDR=$(ip link show ${iface_mgmt} | awk '/link\/ether/{print $2}')
 EOF
-
+fi
 
 if [[ "${HOSTNAME}" =~ "storage" || ! -z "${iface_storage}" ]]; then
 
@@ -106,6 +107,7 @@ EOF
 
 fi
 
+if [[ ! -z "${iface_vxlan}" ]]; then
 cat << EOF > ifcfg-br-vxlan
 BOOTPROTO=none
 DEVICE=br-vxlan
@@ -124,4 +126,4 @@ ONBOOT=yes
 BRIDGE=br-vxlan
 HWADDR=$(ip link show ${iface_vxlan} | awk '/link\/ether/{print $2}')
 EOF
-
+fi

@@ -28,21 +28,78 @@
       ansible.builtin.systemd:
         name: firewalld.service
         masked: yes
-        enabled: no 
+        enabled: no
         force: yes
         state: stopped
-    
+
     - name: Set SELinux to permissive
-      selinux:
+      ansible.posix.selinux:
         policy: targeted
         state: permissive
 
     - name: Ensure packages are upgraded
-      dnf:
+      ansible.builtin.dnf:
         name: "*"
         state: latest
 
+    - name: Disable SSH Agent Forwarding
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^.*AllowAgentForwarding'
+        line: 'AllowAgentForwarding no'
+      notify:
+        - restart_sshd
+
+    - name: Copy interface.sh script to host
+      ansible.builtin.copy:
+        src: 'files/interfaces.sh'
+        dest: '/root/interfaces.sh'
+        mode: 0744
+        owner: 'root'
+        group: 'root'
+      tags:
+        -
+
+    - name: Generate ifcfg files
+      shell: /root/interfaces.sh
+      args:
+        chdir: /etc/sysconfig/network-scripts/
+        creates: /etc/sysconfig/network-scripts/ifcfg-br-mgmt
+      tags:
+        - interfaces
+
+    - name: Setup Infra Nodes
+      block:
+        - name: Install packages
+          ansible.builtin.dnf:
+            name:
+              - git-core
+              - wget
+              - python36
+              - chrony
+              - openssh-server
+              - python3-devel
+              - sudo
+            state: latest
+        - name: Clone repository
+          ansible.builtin.git:
+            repo: https://github.com/NeilHanlon/openstack-ansible.git
+              #single_branch: yes
+            dest: /opt/openstack-ansible
+            version: 'feature/rocky8'
+
+      when: tag.find("infra") != -1
+      tags: test
+
   post_tasks:
+    - name: Disable cloud init from future runs
+      file:
+        path: /etc/cloud/cloud-init.disabled
+        state: touch
+        mode: '0644'
+        owner: root
+        group: root
+
     - name: Touching run file that ansible has ran here
       file:
         path: /var/log/ansible.run
