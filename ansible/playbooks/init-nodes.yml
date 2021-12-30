@@ -31,22 +31,26 @@
         enabled: no
         force: yes
         state: stopped
+      tags: services
 
     - name: Set SELinux to permissive
       ansible.posix.selinux:
         policy: targeted
         state: permissive
+      tags: services
 
     - name: Ensure packages are upgraded
       ansible.builtin.dnf:
         name: "*"
         state: latest
+      tags: packages
 
     - name: Disable SSH Agent Forwarding
       lineinfile:
         dest: /etc/ssh/sshd_config
         regexp: '^.*AllowAgentForwarding'
         line: 'AllowAgentForwarding no'
+      tags: services
       notify:
         - restart_sshd
 
@@ -58,7 +62,7 @@
         owner: 'root'
         group: 'root'
       tags:
-        -
+        - interfaces
 
     - name: Generate ifcfg files
       shell: /root/interfaces.sh
@@ -81,15 +85,17 @@
               - python3-devel
               - sudo
             state: latest
+          tags: packages
         - name: Clone repository
           ansible.builtin.git:
             repo: https://github.com/NeilHanlon/openstack-ansible.git
               #single_branch: yes
             dest: /opt/openstack-ansible
             version: 'feature/rocky8'
+          tags: repos
 
       when: tag.find("infra") != -1
-      tags: test
+      tags: infra
 
   post_tasks:
     - name: Disable cloud init from future runs
