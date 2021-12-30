@@ -1,0 +1,3 @@
+---
+lxc_container_base_name: "rocky-8-amd64"
+lxc_hosts_container_build_command: "dnf --assumeyes --installroot=/var/lib/machines/{{ lxc_container_base_name }} install --setopt=install_weak_deps=False --nodocs rootfiles coreutils dnf rocky-release rocky-repos --releasever=8"

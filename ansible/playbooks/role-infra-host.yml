@@ -1,0 +1,93 @@
+---
+
+- name: Bootstrap
+  hosts: infra1
+  become: true
+
+  handlers:
+    - import_tasks: handlers/main.yml
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "We are able to run on this node"
+        fail_msg: "/etc/no-ansible exists - skipping run on this node"
+
+  tasks:
+    - name: Loading Variables from OS Common
+      import_tasks: tasks/common_vars.yml
+
+    - name: Bootstrap ansible
+      become: true
+      shell: scripts/bootstrap-ansible.sh
+      args:
+        chdir: /opt/openstack-ansible/
+        creates: /etc/ansible/
+      tags:
+        - bootstrap
+
+    - name: Fix roles
+      become: true
+      ansible.builtin.shell:
+        cmd: grep -ril 'openstack.config_template.' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.config_template.,,g'
+      tags:
+        - temporary
+        - ansible
+        - bootstrap
+
+    - name: Deploy and setup configuration
+      block:
+        - name: Copy template to etc
+          ansible.builtin.copy:
+            remote_src: yes
+            src: /opt/openstack-ansible/etc/openstack_deploy
+            dest: /etc/
+            directory_mode: yes
+
+        - name: Copy our openstack configs
+          ansible.builtin.copy:
+            src: "files/{{ item }}.yml"
+            dest: /etc/openstack_deploy/
+            mode: '0644'
+          with_items:
+            - openstack_user_config
+            - user_lxc
+
+        - name: Create secrets
+          become: true
+          ansible.builtin.shell:
+            cmd: /opt/openstack-ansible/scripts/pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
+          tags: secrets
+          args:
+            creates: /etc/openstack_deploy/user_secrets.yml.tar
+
+
+    - name: Check playbooks
+      tags: syntax
+      become: true
+      ansible.builtin.shell:
+        cmd: openstack-ansible --syntax-check ${item}.yml
+      args:
+        chdir: /opt/openstack-ansible/playbooks/
+      with_items:
+        - hosts
+        - infrastructure
+        - openstack
+      register: playbooks_res
+
+  post_tasks:
+    - name: Touching run file that ansible has ran here
+      file:
+        path: /var/log/ansible.run
+        state: touch
+        mode: '0644'
+        owner: root
+        group: root
+...
