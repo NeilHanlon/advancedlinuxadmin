@@ -1,0 +1,4 @@
+---
+# Set max connections to 500 to support running all services
+#
+galera_max_connections: 500

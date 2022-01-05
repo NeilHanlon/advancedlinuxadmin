@@ -2,3 +2,4 @@ id_ed25519
 .terraform/
 .envrc
 *.retry
+ansible/*.retry

@@ -47,8 +47,8 @@
         - name: Copy template to etc
           ansible.builtin.copy:
             remote_src: yes
-            src: /opt/openstack-ansible/etc/openstack_deploy
-            dest: /etc/
+            src: /opt/openstack-ansible/etc/openstack_deploy/
+            dest: /etc/openstack_deploy/
             directory_mode: yes
 
         - name: Copy our openstack configs
@@ -59,6 +59,7 @@
           with_items:
             - openstack_user_config
             - user_lxc
+            - user_galera
 
         - name: Create secrets
           become: true
@@ -73,10 +74,10 @@
       tags: syntax
       become: true
       ansible.builtin.shell:
-        cmd: openstack-ansible --syntax-check ${item}.yml
+        cmd: "openstack-ansible --syntax-check setup-{{ item }}.yml"
       args:
         chdir: /opt/openstack-ansible/playbooks/
-      with_items:
+      loop:
         - hosts
         - infrastructure
         - openstack

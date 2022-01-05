@@ -36,7 +36,7 @@
     - name: Set SELinux to permissive
       ansible.posix.selinux:
         policy: targeted
-        state: permissive
+        state: disabled
       tags: services
 
     - name: Ensure packages are upgraded
@@ -44,6 +44,31 @@
         name: "*"
         state: latest
       tags: packages
+
+    - name: Generate SSH key
+      block:
+        - name: Create ssh key for root
+          ansible.builtin.user:
+            name: root
+            generate_ssh_key: yes
+            ssh_key_bits: 4096
+            ssh_key_file: .ssh/id_rsa
+          register: sshkey_register
+          tags: sshkey
+
+        - name: fetch_keys
+          tags: sshkey
+          fetch:
+            src: "~/.ssh/id_rsa.pub"
+            dest: "files/buffer/infra-id_rsa.pub"
+            flat: yes
+          when: sshkey_register.ssh_public_key != ""
+          register: sshkey_fetch
+
+      when: tag.find("infra") != -1
+      tags:
+        - infra
+        - sshkey
 
     - name: Disable SSH Agent Forwarding
       lineinfile:
