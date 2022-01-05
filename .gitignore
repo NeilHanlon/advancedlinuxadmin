@@ -3,3 +3,4 @@ id_ed25519
 .envrc
 *.retry
 ansible/*.retry
+ansible/playbooks/files/buffer/*
