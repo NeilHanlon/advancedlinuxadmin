@@ -1,7 +1,7 @@
 ---
 
 - name: Bootstrap
-  hosts: infra1
+  hosts: "{{ host }}"
   become: true
 
   handlers:
@@ -43,6 +43,7 @@
         - bootstrap
 
     - name: Deploy and setup configuration
+      when: not aio_install | default('true') # bootstrap-AIO script instead does these things.
       block:
         - name: Copy template to etc
           ansible.builtin.copy:
@@ -50,16 +51,15 @@
             src: /opt/openstack-ansible/etc/openstack_deploy/
             dest: /etc/openstack_deploy/
             directory_mode: yes
+            force: no
 
-        - name: Copy our openstack configs
+        - name: Copy distributed openstack configs
           ansible.builtin.copy:
             src: "files/{{ item }}.yml"
             dest: /etc/openstack_deploy/
             mode: '0644'
           with_items:
             - openstack_user_config
-            - user_lxc
-            - user_galera
 
         - name: Create secrets
           become: true
@@ -68,6 +68,38 @@
           tags: secrets
           args:
             creates: /etc/openstack_deploy/user_secrets.yml.tar
+
+    - name: "[AIO] Deploy and setup configuration / bootstrap"
+      when: aio_install | default('false')
+      block:
+        - name: Debug - Running AIO bootstrap
+          debug:
+            var: aio_install
+
+        - name: Run bootstrap ansible with included args
+          ansible.builtin.shell: scripts/bootstrap-aio.sh
+          become: true
+          args:
+            chdir: /opt/openstack-ansible/
+            creates: /etc/openstack_deploy/
+          tags:
+            - bootstrap
+            - aio
+
+        - name: Create volume group for cinder
+          lvg:
+            pv_options: --metadatasize=2048
+            pvs: "{{ cinder_pv_device | default('/dev/vdb') }}"
+            vg: cinder-volumes
+
+    - name: Copy common openstack configs
+      ansible.builtin.copy:
+        src: "files/{{ item }}.yml"
+        dest: /etc/openstack_deploy/
+        mode: '0644'
+      with_items:
+        - user_lxc
+        - user_galera
 
 
     - name: Check playbooks

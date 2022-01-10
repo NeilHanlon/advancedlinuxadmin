@@ -3,3 +3,9 @@
   service:
     name: sshd
     state: restarted
+- name: enable_targetd
+  shell: "systemctl enable --now target"
+- name: restart_targetd
+  service:
+    name: target
+    state: restarted

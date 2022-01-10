@@ -65,7 +65,7 @@
           when: sshkey_register.ssh_public_key != ""
           register: sshkey_fetch
 
-      when: tag.find("infra") != -1
+      when: tag.find("infra") != -1 and name == "infra1"
       tags:
         - infra
         - sshkey
