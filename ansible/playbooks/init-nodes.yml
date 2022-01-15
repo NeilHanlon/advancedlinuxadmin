@@ -94,6 +94,7 @@
       args:
         chdir: /etc/sysconfig/network-scripts/
         creates: /etc/sysconfig/network-scripts/ifcfg-br-mgmt
+      when: not aio_install
       tags:
         - interfaces
 
@@ -137,7 +138,7 @@
           when: sshkey_register.ssh_public_key != ""
           register: sshkey_fetch
 
-      when: tag.find("infra") != -1
+      when: tag.find("infra") != -1 or aio_install
       tags: infra
 
 

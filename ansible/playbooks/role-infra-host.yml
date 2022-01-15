@@ -99,7 +99,15 @@
         mode: '0644'
       with_items:
         - user_lxc
-        - user_galera
+
+    - name: Disable SSH Agent Forwarding
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^.*AllowAgentForwarding'
+        line: 'AllowAgentForwarding no'
+      tags: services
+      notify:
+        - restart_sshd
 
 
     - name: Check playbooks
