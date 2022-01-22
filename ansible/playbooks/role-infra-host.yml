@@ -99,6 +99,7 @@
         mode: '0644'
       with_items:
         - user_lxc
+        - user_galera
 
     - name: Disable SSH Agent Forwarding
       lineinfile:
