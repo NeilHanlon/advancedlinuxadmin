@@ -36,7 +36,10 @@
     - name: Fix roles
       become: true
       ansible.builtin.shell:
-        cmd: grep -ril 'openstack.config_template.' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.config_template.,,g'
+        cmd: "{{ item }}"
+      with_items:
+        - grep -ril 'openstack.config_template.' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.config_template.,,g'
+        - grep -ril 'openstack.osa.provider_networks' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.osa.provider_networks,provider_networks,g'
       tags:
         - temporary
         - ansible
