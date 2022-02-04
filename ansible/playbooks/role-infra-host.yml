@@ -33,17 +33,18 @@
       tags:
         - bootstrap
 
-    - name: Fix roles
-      become: true
-      ansible.builtin.shell:
-        cmd: "{{ item }}"
-      with_items:
-        - grep -ril 'openstack.config_template.' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.config_template.,,g'
-        - grep -ril 'openstack.osa.provider_networks' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.osa.provider_networks,provider_networks,g'
-      tags:
-        - temporary
-        - ansible
-        - bootstrap
+          #- name: Fix roles
+          #  become: true
+          #  ansible.builtin.shell:
+          #    cmd: "{{ item }}"
+          #  with_items:
+          #    - grep -ril 'openstack.config_template.' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.config_template.,,g'
+          #    - grep -ril 'openstack.osa.provider_networks' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.osa.provider_networks,provider_networks,g'
+          #    - grep -ril 'openstack.osa.db_se' /etc/ansible/roles/ | xargs sed -i.bak 's,openstack.osa.provider_networks,provider_networks,g'
+          #  tags:
+          #    - temporary
+          #    - ansible
+          #    - bootstrap
 
     - name: Deploy and setup configuration
       when: not aio_install | default('true') # bootstrap-AIO script instead does these things.
@@ -89,11 +90,11 @@
             - bootstrap
             - aio
 
-        - name: Create volume group for cinder
-          lvg:
-            pv_options: --metadatasize=2048
-            pvs: "{{ cinder_pv_device | default('/dev/vdb') }}"
-            vg: cinder-volumes
+              #- name: Create volume group for cinder
+              #  lvg:
+              #    pv_options: --metadatasize=2048
+              #    pvs: "{{ cinder_pv_device | default('/dev/vdb') }}"
+              #    vg: cinder-volumes
 
     - name: Copy common openstack configs
       ansible.builtin.copy:
@@ -103,6 +104,7 @@
       with_items:
         - user_lxc
         - user_galera
+      tags: config
 
     - name: Disable SSH Agent Forwarding
       lineinfile:

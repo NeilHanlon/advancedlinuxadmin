@@ -106,20 +106,27 @@
             name:
               - git-core
               - wget
-              - python36
+                #- python36
               - chrony
               - openssh-server
-              - python3-devel
+                #- python3-devel
               - sudo
             state: latest
           tags: packages
         - name: Clone repository
           ansible.builtin.git:
-            repo: https://github.com/NeilHanlon/openstack-ansible.git
+            #repo: https://opendev.org/openstack/openstack-ansible.git
+            repo: https://review.opendev.org/openstack/openstack-ansible
               #single_branch: yes
             dest: /opt/openstack-ansible
-            version: 'feature/rocky8'
+            version: 'master'
           tags: repos
+
+        - name: fetch patch
+          ansible.builtin.shell: 'git fetch https://review.opendev.org/openstack/openstack-ansible refs/changes/73/823573/5 && git checkout FETCH_HEAD'
+          args:
+            chdir: /opt/openstack-ansible/
+
 
         - name: Create ssh key for root
           ansible.builtin.user:
