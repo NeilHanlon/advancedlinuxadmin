@@ -106,6 +106,15 @@
         - user_galera
       tags: config
 
+    - name: fuck my entire life
+      ansible.builtin.copy:
+        src: "files/{{ item }}.yml"
+        dest: /etc/ansible/roles/lxc_hosts/tasks/
+        mode: '0644'
+      with_items:
+        - lxc_install_dnf
+      tags: config
+
     - name: Disable SSH Agent Forwarding
       lineinfile:
         dest: /etc/ssh/sshd_config

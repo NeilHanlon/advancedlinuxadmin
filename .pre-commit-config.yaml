@@ -1,5 +1,3 @@
-
-  
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -33,3 +31,5 @@ repos:
         files: \.(yaml|yml)$
         types: [file, yaml]
         entry: yamllint
+
+exclude: '^ansible/playbooks/files/lxc_install_dnf.yml$'
