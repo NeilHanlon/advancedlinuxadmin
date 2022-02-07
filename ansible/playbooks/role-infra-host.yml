@@ -82,12 +82,14 @@
           debug:
             var: aio_install
 
-        - name: Run bootstrap ansible with included args
+        - name: Run bootstrap aio with included args
           ansible.builtin.shell: scripts/bootstrap-aio.sh
           become: true
           args:
             chdir: /opt/openstack-ansible/
             creates: /etc/openstack_deploy/
+          environment:
+            SCENARIO: "{{ SCENARIO | default('') }}"
           tags:
             - bootstrap
             - aio
@@ -109,7 +111,7 @@
         - user_debug
       tags: config
 
-    - name: fuck my entire life
+    - name: manually patch lxc_hosts role to bring in powertools repo
       ansible.builtin.copy:
         src: "files/{{ item }}.yml"
         dest: /etc/ansible/roles/lxc_hosts/tasks/
@@ -117,6 +119,21 @@
       with_items:
         - lxc_install_dnf
       tags: config
+
+    - name: manually patch os_nova role to kill powervmtools and futures== requiresments
+      ansible.builtin.copy:
+        src: "files/{{ item }}"
+        dest: /tmp/
+        mode: '0644'
+      with_items:
+        - os_nova.patch
+      tags: config
+
+    - name: patch the thing
+      args:
+        chdir: /etc/ansible/roles/os_nova/
+      ansible.builtin.shell: patch -p1 < /tmp/os_nova.patch
+      when: do_patch | bool
 
     - name: Disable SSH Agent Forwarding
       lineinfile:

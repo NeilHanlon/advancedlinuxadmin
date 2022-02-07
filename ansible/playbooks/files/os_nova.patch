@@ -1,0 +1,24 @@
+diff --git a/tasks/nova_install.yml b/tasks/nova_install.yml
+index 3002c22..523b867 100644
+--- a/tasks/nova_install.yml
++++ b/tasks/nova_install.yml
+@@ -38,12 +38,18 @@
+   tags:
+     - nova-pip-packages
+
++- name: Retrieve the constraints URL
++  uri:
++    url: "{{ nova_upper_constraints_url }}"
++    return_content: yes
++  register: _u_c_contents
++
+ - name: Install the python venv
+   import_role:
+     name: "python_venv_build"
+   vars:
+     venv_python_executable: "{{ nova_venv_python_executable }}"
+-    venv_build_constraints: "{{ nova_git_constraints }}"
++    venv_build_constraints: "{{ _u_c_contents.content.split('\n') | reject('match', '^(futures|pypowervm)') | list }}"
+     venv_build_distro_package_list: "{{ nova_devel_distro_packages }}"
+     venv_install_destination_path: "{{ nova_bin | dirname }}"
+     venv_pip_install_args: "{{ nova_pip_install_args }}"
