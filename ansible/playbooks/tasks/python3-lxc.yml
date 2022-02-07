@@ -1,0 +1,26 @@
+---
+- name: Enable PowerTools repo
+  # NB: doesn't run command  `dnf config-manager --set-enabled PowerTools` as can't make that idempotent
+  lineinfile:
+    path: /etc/yum.repos.d/Rocky-PowerTools.repo
+    create: false # so raise error if not already installed
+    regexp: enabled=
+    line: enabled=1
+  when: ansible_distribution_major_version == "8"
+
+- name: Copy distributed openstack configs
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /tmp/
+    mode: '0644'
+  with_items:
+    - python38-lxc-3.0.4-11.el8.x86_64.rpm
+
+- name: Install package
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+  with_items:
+    - https://download.copr.fedorainfracloud.org/results/neil/lxc3.0/epel-8-x86_64/03253339-lxc/lxc-4.0.10-2.el8.x86_64.rpm
+    - https://download.copr.fedorainfracloud.org/results/neil/lxc3.0/epel-8-x86_64/03253339-lxc/lxc-devel-4.0.10-2.el8.x86_64.rpm
+    - https://download.copr.fedorainfracloud.org/results/neil/lxc3.0/epel-8-x86_64/03253339-lxc/lxc-libs-4.0.10-2.el8.x86_64.rpm
+    - /tmp/python38-lxc-3.0.4-11.el8.x86_64.rpm

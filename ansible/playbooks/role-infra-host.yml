@@ -73,6 +73,8 @@
           args:
             creates: /etc/openstack_deploy/user_secrets.yml.tar
 
+    - import_tasks: tasks/python3-lxc.yml
+
     - name: "[AIO] Deploy and setup configuration / bootstrap"
       when: aio_install | default('false')
       block:
@@ -104,6 +106,7 @@
       with_items:
         - user_lxc
         - user_galera
+        - user_debug
       tags: config
 
     - name: fuck my entire life
