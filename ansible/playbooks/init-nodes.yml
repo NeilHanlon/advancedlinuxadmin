@@ -86,7 +86,7 @@
         mode: 0744
         owner: 'root'
         group: 'root'
-      when: not aio_install
+      when: aio_install is undefined or not aio_install
       tags:
         - interfaces
 
@@ -95,7 +95,7 @@
       args:
         chdir: /etc/sysconfig/network-scripts/
         creates: /etc/sysconfig/network-scripts/ifcfg-br-mgmt
-      when: not aio_install
+      when: aio_install is undefined or not aio_install
       tags:
         - interfaces
 
@@ -151,7 +151,7 @@
 
 
     - name: Install packages on non-infra hosts
-      when: tag.find("infra") == -1 or aio_install
+      when: tag.find("infra") != -1 or aio_install
       ansible.builtin.dnf:
         name:
           - iputils
