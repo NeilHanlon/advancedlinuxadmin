@@ -141,7 +141,7 @@
     user: root
     state: present
     key: "{{ lookup('file', 'files/buffer/infra-id_rsa.pub') }}"
-  when: tag.find("infra") == -1 and sshkey_fetch
+  when: tag.find("infra") == -1 and sshkey_fetch | default(false)
   tags: sshkey
 
     #- name: Setup a hosts file for the static deployment

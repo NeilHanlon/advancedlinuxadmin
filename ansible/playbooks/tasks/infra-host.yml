@@ -94,8 +94,9 @@
 - name: patch the thing
   args:
     chdir: /etc/ansible/roles/os_nova/
-  ansible.builtin.shell: patch -p1 < /tmp/os_nova.patch
-  when: do_patch | default(true) | bool
+    creates: /etc/ansible/roles/os_nova/.patched
+  ansible.builtin.shell: 'patch -p1 < /tmp/os_nova.patch && touch .patched'
+
 
 - name: Disable SSH Agent Forwarding
   lineinfile:

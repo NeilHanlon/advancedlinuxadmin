@@ -16,9 +16,15 @@
   with_items:
     - python38-lxc-3.0.4-11.el8.x86_64.rpm
 
+# @TODO - fix this to not be shit
+- name: Install neil/lxc3.0 copr
+  become: yes
+  shell: "dnf -y copr enable neil/lxc3.0"
+
 - name: Install package
   ansible.builtin.dnf:
     name: "{{ item }}"
+    disable_gpg_check: yes # @TODO NO
   with_items:
     - https://download.copr.fedorainfracloud.org/results/neil/lxc3.0/epel-8-x86_64/03253339-lxc/lxc-4.0.10-2.el8.x86_64.rpm
     - https://download.copr.fedorainfracloud.org/results/neil/lxc3.0/epel-8-x86_64/03253339-lxc/lxc-devel-4.0.10-2.el8.x86_64.rpm
