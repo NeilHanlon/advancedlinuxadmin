@@ -1,0 +1,17 @@
+---
+# Setup the storage host. Install targetcli and make sure any volumes are mounted.
+- name: Loading Variables from OS Common
+  import_tasks: tasks/common_vars.yml
+
+- name: Install required packages
+  become: true
+  dnf:
+    name: targetcli
+  notify: enable_targetd
+
+- name: Create volume group for cinder
+  lvg:
+    pv_options: --metadatasize=2048
+    pvs: "{{ cinder_pv_device | default('/dev/vdb') }}"
+    vg: cinder-volumes
+...

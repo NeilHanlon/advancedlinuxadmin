@@ -1,4 +1,0 @@
----
-- import_playbook: init-nodes.yml
-- import_playbook: adhoc-reboot.yml
-- import_playbook: role-infra-host.yml

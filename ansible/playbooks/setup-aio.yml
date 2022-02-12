@@ -1,1 +1,7 @@
 ---
+- name: Bootstrap an AIO install
+  hosts: "{{ host | default('aio1') }}"
+  become: true
+
+  tasks:
+    - import_playbook: setup-distributed.yml aio_install=1

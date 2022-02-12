@@ -1,0 +1,57 @@
+---
+# Installs everything on hosts
+#
+- name: Bootstrap nodes for distributed OSA installation
+  hosts: "{{ host | default('infra1,compute1,storage1') }}"
+  become: true
+
+  handlers:
+    - import_tasks: handlers/main.yml
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "We are able to run on this node"
+        fail_msg: "/etc/no-ansible exists - skipping run on this node"
+
+    - name: Loading Variables from OS Common
+      import_tasks: tasks/common_vars.yml
+
+  tasks:
+    - name: Initialize nodes
+      include_tasks: tasks/init-nodes.yml
+
+    - name: Reboot
+      include_tasks: tasks/reboot.yml
+
+    - name: Setup infra hosts
+      include_tasks: tasks/infra-host.yml
+      when: tag.find("infra") != -1 # when on an infra tagged host
+
+    - name: Setup storage hosts
+      include_tasks: tasks/storage-host.yml
+      when: tag.find("storage") != -1 # when on an infra tagged host
+
+  post_tasks:
+    - name: Copy key to others
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', 'files/buffer/infra-id_rsa.pub') }}"
+      when: tag.find("infra") == -1 and sshkey_fetch
+      tags: sshkey
+
+    - name: Touching run file that ansible has ran here
+      file:
+        path: /var/log/ansible.run
+        state: touch
+        mode: '0644'
+        owner: root
+        group: root

@@ -1,0 +1,11 @@
+---
+- name: Reboot machine
+  reboot:
+  register: reboot_register
+
+- name: Verify reboot
+  assert:
+    that:
+      - "reboot_register.rebooted"
+    success_msg: "Machine rebooted successfully."
+    fail_msg: "Machine failed to boot: {{ ansible_hostname }}"
