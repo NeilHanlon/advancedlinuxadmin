@@ -34,8 +34,8 @@
       args:
         creates: /etc/openstack_deploy/user_secrets.yml.tar
 
-          #- import_tasks: tasks/python3-lxc.yml
-          #  tags: python3-lxc
+- import_tasks: tasks/python3-lxc.yml
+  tags: python3-lxc
 
 - name: "[AIO] Deploy and setup configuration / bootstrap"
   when: aio_install | default('false')

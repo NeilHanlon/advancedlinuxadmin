@@ -27,27 +27,23 @@
   tasks:
     - name: Initialize nodes
       include_tasks: tasks/init-nodes.yml
+      tags: init
 
     - name: Reboot
       include_tasks: tasks/reboot.yml
+      tags: reboot
 
     - name: Setup infra hosts
       include_tasks: tasks/infra-host.yml
       when: tag.find("infra") != -1 # when on an infra tagged host
+      tags: infra
 
     - name: Setup storage hosts
       include_tasks: tasks/storage-host.yml
       when: tag.find("storage") != -1 # when on an infra tagged host
+      tags: storage
 
   post_tasks:
-    - name: Copy key to others
-      ansible.posix.authorized_key:
-        user: root
-        state: present
-        key: "{{ lookup('file', 'files/buffer/infra-id_rsa.pub') }}"
-      when: tag.find("infra") == -1 and sshkey_fetch
-      tags: sshkey
-
     - name: Touching run file that ansible has ran here
       file:
         path: /var/log/ansible.run
