@@ -121,10 +121,8 @@
         flat: yes
       when: sshkey_register.ssh_public_key != ""
       register: sshkey_fetch
-
   when: tag.find("infra") != -1 or aio_install | default(false)
   tags: infra
-
 
 - name: Install packages on non-infra hosts
   when: tag.find("infra") != -1 or aio_install | default(false)
@@ -145,6 +143,16 @@
     key: "{{ lookup('file', 'files/buffer/infra-id_rsa.pub') }}"
   when: tag.find("infra") == -1 and sshkey_fetch
   tags: sshkey
+
+    #- name: Setup a hosts file for the static deployment
+    #  ansible.builtin.lineinfile:
+    #    dest: /etc/hosts
+    #    line: "{{ hostvars[ansible_fqdn]['ansible_br_mgmt']['ipv4']['address'] }} {{ ansible_hostname }}"
+    #  when:
+    #    - hostvars[ansible_fqdn]['ansible_br_mgmt'] is defined
+    #    - hostvars[ansible_fqdn]['ansible_br_mgmt']['ipv4']['address'] is defined
+    #  tags: debug123
+
 
 - name: Disable cloud init from future runs
   file:
