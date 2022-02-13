@@ -81,7 +81,6 @@
         name:
           - git-core
           - wget
-            #- python36
           - chrony
           - openssh-server
             #- python3-devel

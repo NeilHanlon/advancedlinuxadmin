@@ -3,5 +3,6 @@
   hosts: "{{ host | default('aio1') }}"
   become: true
 
-  tasks:
-    - import_playbook: setup-distributed.yml aio_install=1
+- import_playbook: setup-distributed.yml
+  vars:
+    aio_install: 1

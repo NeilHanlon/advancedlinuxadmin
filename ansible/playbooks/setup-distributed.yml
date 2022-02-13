@@ -26,25 +26,19 @@
 
   tasks:
     - name: Initialize nodes
-      include_tasks: tasks/init-nodes.yml
-      args:
-        apply:
-          tags: 'init'
-      tags: init
+      import_tasks: tasks/init-nodes.yml
 
     - name: Reboot
-      include_tasks: tasks/reboot.yml
-      tags: reboot
+      import_tasks: tasks/reboot.yml
+      when: reboot | default(true) | bool
 
     - name: Setup infra hosts
-      include_tasks: tasks/infra-host.yml
-      when: tag.find("infra") != -1 # when on an infra tagged host
-      tags: infra
+      import_tasks: tasks/infra-host.yml
+      when: tag.find("infra") != -1 or aio_install  | default(false) | bool # when on an infra tagged host
 
     - name: Setup storage hosts
-      include_tasks: tasks/storage-host.yml
-      when: tag.find("storage") != -1 # when on an infra tagged host
-      tags: storage
+      import_tasks: tasks/storage-host.yml
+      when: tag.find("storage") != -1 # when on an storage tagged host
 
   post_tasks:
     - name: Touching run file that ansible has ran here

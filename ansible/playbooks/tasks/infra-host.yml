@@ -33,12 +33,21 @@
       tags: secrets
       args:
         creates: /etc/openstack_deploy/user_secrets.yml.tar
+  when: aio_install is undefined | default(false)
 
 - import_tasks: tasks/python3-lxc.yml
+
+- name:
+  file:
+    path: /usr/share/lxc/config/rockylinux.common.conf
+    mode: '0644'
+    owner: root
+    group: root
+
   tags: python3-lxc
 
 - name: "[AIO] Deploy and setup configuration / bootstrap"
-  when: aio_install | default('false')
+  when: aio_install | default('false') | bool
   block:
     - name: Debug - Running AIO bootstrap
       debug:
