@@ -38,8 +38,9 @@
 - import_tasks: tasks/python3-lxc.yml
 
 - name:
-  file:
-    path: /usr/share/lxc/config/rockylinux.common.conf
+  copy:
+    content: ""
+    dest: /usr/share/lxc/config/rockylinux.common.conf
     mode: '0644'
     owner: root
     group: root
@@ -60,7 +61,7 @@
         chdir: /opt/openstack-ansible/
         creates: /etc/openstack_deploy/
       environment:
-        SCENARIO: "{{ SCENARIO | default('') }}"
+        SCENARIO: "{{ SCENARIO | default('aio_metal') }}"
       tags:
         - bootstrap
         - aio
