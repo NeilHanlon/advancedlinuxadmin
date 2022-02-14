@@ -9,9 +9,18 @@
     name: targetcli
   notify: enable_targetd
 
+- name: Check if cinder_pv_device is set
+  stat:
+    path: "{{ cinder_pv_device | default('/dev/vdb') }}"
+  register: stat_cinder_pv_dev
+
 - name: Create volume group for cinder
   lvg:
     pv_options: --metadatasize=2048
     pvs: "{{ cinder_pv_device | default('/dev/vdb') }}"
     vg: cinder-volumes
+  when:
+    - stat_cinder_pv_dev.stat.exists
+    - stat.cinder_pv_device.stat.isblk
+
 ...

@@ -59,8 +59,14 @@ fi
 if [[ "${HOSTNAME}" =~ "compute" ]]; then
   let hostpart='6'
 fi
-if [[ "${HOSTNAME}" =~ "storage" ]]; then
+if [[ "${HOSTNAME}" =~ "storage1" ]]; then
   let hostpart='7'
+fi
+if [[ "${HOSTNAME}" =~ "storage2" ]]; then
+  let hostpart='8'
+fi
+if [[ "${HOSTNAME}" =~ "storage3" ]]; then
+  let hostpart='9'
 fi
 
 if [[ ! -z "${iface_mgmt}" ]]; then
