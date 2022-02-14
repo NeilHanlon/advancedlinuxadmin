@@ -1,0 +1,3 @@
+---
+nova_git_install_branch: master
+requirements_git_install_branch: master
