@@ -61,7 +61,7 @@
         chdir: /opt/openstack-ansible/
         creates: /etc/openstack_deploy/
       environment:
-        SCENARIO: "{{ SCENARIO | default('aio_metal') }}"
+        SCENARIO: "{{ SCENARIO | default('aio_lxc') }}"
       tags:
         - bootstrap
         - aio

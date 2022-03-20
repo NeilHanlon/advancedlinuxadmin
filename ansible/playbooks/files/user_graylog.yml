@@ -1,0 +1,15 @@
+graylog_password_secret: "%QGWQASqrneb&qNpkSHp2bnis7hdw$jG2XcP5n9tDX@wpN2XA2*wskunfzA@6MDWpEbpT7Qsc#KFS26KR4n$XiCR7m$43^*v"
+graylog_root_username: "admin"
+graylog_root_password_sha2: "665903cabea02680f8b71807b7c2e1a1698507f71654316fadba6966948a002c" # The output of `echo -n yourpassword | shasum -a 256`
+haproxy_extra_services:
+  - service:
+      haproxy_service_name: graylog
+      haproxy_backend_nodes: "{{ [groups['graylog_hosts'][0]] | default([]) }}"
+      haproxy_ssl: "{{ haproxy_ssl }}"
+      haproxy_port: 9000
+      haproxy_balance_type: http
+      haproxy_backend_arguments:
+        - "http-request set-header X-Graylog-Server-URL https://{{ external_lb_vip_address }}:9000"
+
+graylog_targets:
+  - "{{ groups['graylog_hosts'][0] }}:12201"

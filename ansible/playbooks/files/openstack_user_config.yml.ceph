@@ -59,14 +59,20 @@ x-compute-hosts: &x-compute-hosts
 x-storage-hosts: &x-storage-hosts
   storage1:
     ip: 172.29.220.7
-    container_vars:
-      cinder_backends:
-        limit_container_types: cinder_volume
-        lvm:
-          volume_group: cinder-volumes
-          volume_driver: cinder.volume.drivers.lvm.LVMVolumeDriver
-          volume_backend_name: LVM_iSCSI
-          iscsi_ip_address: "172.29.228.7"
+  storage2:
+    ip: 172.29.220.8
+  storage3:
+    ip: 172.29.220.9
+
+##
+## Ceph
+##
+ceph-mon_hosts:
+  <<: *x-storage-hosts
+ceph-osd_hosts:
+  <<: *x-storage-hosts
+ceph-rgw_hosts:
+  <<: *x-storage-hosts
 
 ##
 ## Infrastructure
@@ -100,4 +106,4 @@ network_hosts:
 compute_hosts:
   <<: *x-compute-hosts
 storage_hosts:
-  <<: *x-storage-hosts
+  <<: *x-infra-hosts
