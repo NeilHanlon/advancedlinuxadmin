@@ -23,6 +23,9 @@
       import_tasks: tasks/common_vars.yml
 
   tasks:
+    - name: configure clouds.yml
+      import_tasks: tasks/configure_openstacksdk.yml
+
     - name: setup flavors
       openstack.cloud.compute_flavor:
         cloud: linuxadminbooks

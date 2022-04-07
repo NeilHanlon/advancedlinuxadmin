@@ -21,4 +21,4 @@ clouds = {
 }
 
 
-print(yaml.dumps(clouds))
+print(yaml.safe_dump(clouds))

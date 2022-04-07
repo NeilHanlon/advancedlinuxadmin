@@ -1,0 +1,6 @@
+---
+- name: Upload clouds.py
+  ansible.builtin.copy:
+    src: "../scripts/clouds.py"
+    dest: /root/clouds.py
+    mode: '0750'
