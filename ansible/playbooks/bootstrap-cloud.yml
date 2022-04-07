@@ -1,0 +1,65 @@
+---
+- name: Bootstrap our cloud with stuff
+  hosts: "{{ host | default('infra1') }}" # Go on infra host by default
+  become: true
+
+  handlers:
+    - import_tasks: handlers/main.yml
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "We are able to run on this node"
+        fail_msg: "/etc/no-ansible exists - skipping run on this node"
+
+    - name: Loading Variables from OS Common
+      import_tasks: tasks/common_vars.yml
+
+  tasks:
+    - name: setup flavors
+      openstack.cloud.compute_flavor:
+        cloud: linuxadminbooks
+        state: present
+        name: "{{ item.name }}"
+        ram: "{{ item.ram }}"
+        vcpus: "{{ item.vcpus }}"
+        disk: "{{ item.disk }}"
+        ephemeral: "{{ item.ephemeral }}"
+        is_public: yes
+      tags: flavors
+      # yamllint disable rule:braces
+      loop:
+        - { name: 'tiny', ram: 1024, vcpus: 1, disk: 10, ephemeral: 10 }
+        - { name: 'small', ram: 2048, vcpus: 1, disk: 20, ephemeral: 20 }
+        - { name: 'medium', ram: 4096, vcpus: 2, disk: 20, ephemeral: 40 }
+        - { name: 'large', ram: 8192, vcpus: 4, disk: 20, ephemeral: 80 }
+        - { name: 'xlarge', ram: 16384, vcpus: 8, disk: 20, ephemeral: 100 }
+      # yamllint enable rule:braces
+
+    - name: setup images
+      include_tasks: tasks/upload_image.yml
+      tags: images
+      args:
+        apply:
+          tags: images
+      # yamllint disable rule:braces
+      loop:
+        - { name: 'cirros', filename: 'http://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img', properties: {cpu_arch: x86_64, distro: cirros}}
+        - { name: 'rockylinux85', filename: 'https://dl.rockylinux.org/pub/rocky/8/images/Rocky-8-GenericCloud-8.5-20211114.2.x86_64.qcow2', properties: {cpu_arch: x86_64, distro: rocky}}
+      # yamllint enable rule:braces
+
+  post_tasks:
+    - name: Touching run file that ansible has ran here
+      file:
+        path: /var/log/ansible.run
+        state: touch
+        mode: '0644'
+        owner: root
+        group: root

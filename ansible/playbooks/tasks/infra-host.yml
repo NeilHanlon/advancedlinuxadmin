@@ -35,17 +35,16 @@
         creates: /etc/openstack_deploy/user_secrets.yml.tar
   when: aio_install is undefined | default(false)
 
-- import_tasks: tasks/python3-lxc.yml
+    #- import_tasks: tasks/python3-lxc.yml
 
-- name:
-  copy:
-    content: ""
-    dest: /usr/share/lxc/config/rockylinux.common.conf
-    mode: '0644'
-    owner: root
-    group: root
-
-  tags: python3-lxc
+    #- name:
+    #  copy:
+    #    content: ""
+    #    dest: /usr/share/lxc/config/rockylinux.common.conf
+    #    mode: '0644'
+    #    owner: root
+    #    group: root
+    #  tags: python3-lxc
 
 - name: "[AIO] Deploy and setup configuration / bootstrap"
   when: aio_install | default('false') | bool
@@ -61,7 +60,7 @@
         chdir: /opt/openstack-ansible/
         creates: /etc/openstack_deploy/
       environment:
-        SCENARIO: "{{ SCENARIO | default('aio_lxc') }}"
+        SCENARIO: "{{ SCENARIO | default('aio_metal') }}"
       tags:
         - bootstrap
         - aio

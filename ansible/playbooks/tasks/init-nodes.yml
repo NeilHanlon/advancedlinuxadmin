@@ -97,12 +97,6 @@
         version: 'master'
       tags: repos
 
-    - name: fetch patch
-      ansible.builtin.shell: 'git fetch https://review.opendev.org/openstack/openstack-ansible refs/changes/73/823573/13 && git checkout FETCH_HEAD'
-      args:
-        chdir: /opt/openstack-ansible/
-
-
     - name: Create ssh key for root
       ansible.builtin.user:
         name: root
