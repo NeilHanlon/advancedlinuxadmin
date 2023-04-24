@@ -54,8 +54,9 @@
           tags: images
       # yamllint disable rule:braces
       loop:
-        - { name: 'cirros', filename: 'http://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img', properties: {cpu_arch: x86_64, distro: cirros}}
-        - { name: 'rockylinux85', filename: 'https://dl.rockylinux.org/pub/rocky/8/images/Rocky-8-GenericCloud-8.5-20211114.2.x86_64.qcow2', properties: {cpu_arch: x86_64, distro: rocky}}
+        # - { name: 'cirros', filename: 'http://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img', properties: {cpu_arch: x86_64, distro: cirros, protected: true}}
+        - { name: 'rockylinux86', filename: 'https://dl.rockylinux.org/pub/rocky/8/images/Rocky-8-GenericCloud.latest.x86_64.qcow2', properties: {cpu_arch: x86_64, distro: rocky}}
+        - { name: 'rockylinux90', filename: 'https://dl.rockylinux.org/pub/rocky/9/images/Rocky-9-GenericCloud.latest.x86_64.qcow2', properties: {cpu_arch: x86_64, distro: rocky}}
       # yamllint enable rule:braces
 
   post_tasks:

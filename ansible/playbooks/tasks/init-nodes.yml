@@ -2,9 +2,9 @@
 - name: Disable Firewalld
   ansible.builtin.systemd:
     name: firewalld.service
-    masked: yes
-    enabled: no
-    force: yes
+    masked: true
+    enabled: false
+    force: true
     state: stopped
   tags: services
 
@@ -20,12 +20,24 @@
     state: latest
   tags: packages
 
+- name: remove curl
+  ansible.builtin.dnf:
+    name: "curl"
+    state: absent
+  tags: packages
+
+- name: add curl-minimal
+  ansible.builtin.dnf:
+    name: "curl-minimal"
+    state: latest
+  tags: packages
+
 - name: Generate SSH key
   block:
     - name: Create ssh key for root
       ansible.builtin.user:
         name: root
-        generate_ssh_key: yes
+        generate_ssh_key: true
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
       register: sshkey_register
@@ -36,7 +48,7 @@
       fetch:
         src: "~/.ssh/id_rsa.pub"
         dest: "files/buffer/infra-id_rsa.pub"
-        flat: yes
+        flat: true
       when: sshkey_register.ssh_public_key != ""
       register: sshkey_fetch
 
@@ -54,23 +66,12 @@
   notify:
     - restart_sshd
 
-- name: Copy interface.sh script to host
-  ansible.builtin.copy:
-    src: 'files/interfaces.sh'
-    dest: '/root/interfaces.sh'
-    mode: 0744
-    owner: 'root'
-    group: 'root'
-  when: aio_install is undefined or not aio_install
-  tags:
-    - interfaces
-
-- name: Generate ifcfg files
-  shell: /root/interfaces.sh
+- name: Setup network
+  include_tasks: tasks/setup-network.yml
+  when: aio_install is undefined or not aio_install  # don't run when AIO
   args:
-    chdir: /etc/sysconfig/network-scripts/
-    creates: /etc/sysconfig/network-scripts/ifcfg-br-mgmt
-  when: aio_install is undefined or not aio_install
+    apply:
+      tags: interfaces
   tags:
     - interfaces
 
@@ -83,24 +84,23 @@
           - wget
           - chrony
           - openssh-server
-            #- python3-devel
           - sudo
-          - patch # temporary
         state: latest
       tags: packages
     - name: Clone repository
       ansible.builtin.git:
-        #repo: https://opendev.org/openstack/openstack-ansible.git
         repo: https://review.opendev.org/openstack/openstack-ansible
-          #single_branch: yes
         dest: /opt/openstack-ansible
-        version: 'master'
+        version: stable/zed
+        # version: 'b958c02eeed355484be12db736ed81a047f7d7c0'
+        # refspec: 'refs/changes/81/852181/2'
+
       tags: repos
 
     - name: Create ssh key for root
       ansible.builtin.user:
         name: root
-        generate_ssh_key: yes
+        generate_ssh_key: true
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
       register: sshkey_register
@@ -111,7 +111,7 @@
       fetch:
         src: "~/.ssh/id_rsa.pub"
         dest: "files/buffer/infra-id_rsa.pub"
-        flat: yes
+        flat: true
       when: sshkey_register.ssh_public_key != ""
       register: sshkey_fetch
   when: tag.find("infra") != -1 or aio_install | default(false)
@@ -136,16 +136,6 @@
     key: "{{ lookup('file', 'files/buffer/infra-id_rsa.pub') }}"
   when: tag.find("infra") == -1 and sshkey_fetch | default(false)
   tags: sshkey
-
-    #- name: Setup a hosts file for the static deployment
-    #  ansible.builtin.lineinfile:
-    #    dest: /etc/hosts
-    #    line: "{{ hostvars[ansible_fqdn]['ansible_br_mgmt']['ipv4']['address'] }} {{ ansible_hostname }}"
-    #  when:
-    #    - hostvars[ansible_fqdn]['ansible_br_mgmt'] is defined
-    #    - hostvars[ansible_fqdn]['ansible_br_mgmt']['ipv4']['address'] is defined
-    #  tags: debug123
-
 
 - name: Disable cloud init from future runs
   file:

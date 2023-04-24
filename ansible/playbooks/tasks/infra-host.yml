@@ -12,11 +12,11 @@
   block:
     - name: Copy template to etc
       ansible.builtin.copy:
-        remote_src: yes
+        remote_src: true
         src: /opt/openstack-ansible/etc/openstack_deploy/
         dest: /etc/openstack_deploy
-        directory_mode: yes
-        force: no
+        directory_mode: true
+        force: false
 
     - name: Copy distributed openstack configs
       ansible.builtin.copy:
@@ -35,17 +35,6 @@
         creates: /etc/openstack_deploy/user_secrets.yml.tar
   when: aio_install is undefined | default(false)
 
-    #- import_tasks: tasks/python3-lxc.yml
-
-    #- name:
-    #  copy:
-    #    content: ""
-    #    dest: /usr/share/lxc/config/rockylinux.common.conf
-    #    mode: '0644'
-    #    owner: root
-    #    group: root
-    #  tags: python3-lxc
-
 - name: "[AIO] Deploy and setup configuration / bootstrap"
   when: aio_install | default('false') | bool
   block:
@@ -60,7 +49,7 @@
         chdir: /opt/openstack-ansible/
         creates: /etc/openstack_deploy/
       environment:
-        SCENARIO: "{{ SCENARIO | default('aio_metal') }}"
+        SCENARIO: "{{ SCENARIO | default('aio_lxc') }}"
       tags:
         - bootstrap
         - aio
@@ -77,35 +66,8 @@
     dest: /etc/openstack_deploy/
     mode: '0644'
   with_items:
-    - user_lxc
     - user_galera
-    - user_debug
   tags: config
-
-- name: manually patch lxc_hosts role to bring in powertools repo
-  ansible.builtin.copy:
-    src: "files/{{ item }}.yml"
-    dest: /etc/ansible/roles/lxc_hosts/tasks/
-    mode: '0644'
-  with_items:
-    - lxc_install_dnf
-  tags: config,patch
-
-- name: manually patch os_nova role to kill powervmtools and futures== requiresments
-  ansible.builtin.copy:
-    src: "files/{{ item }}"
-    dest: /tmp/
-    mode: '0644'
-  with_items:
-    - os_nova.patch
-  tags: config,patch
-
-- name: patch the thing
-  args:
-    chdir: /etc/ansible/roles/os_nova/
-    creates: /etc/ansible/roles/os_nova/.patched
-  ansible.builtin.shell: 'patch -p1 < /tmp/os_nova.patch && touch .patched'
-
 
 - name: Disable SSH Agent Forwarding
   lineinfile:

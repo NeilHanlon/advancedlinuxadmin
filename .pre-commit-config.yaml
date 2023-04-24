@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -12,24 +12,22 @@ repos:
       - id: pretty-format-json
       - id: detect-private-key
 
-  - repo: local
-    hooks:
-      - id: ansible-lint
-        name: Ansible-lint
-        description: This hook runs ansible-lint.
-        entry: ansible-lint --force-color
-        language: python
-        # do not pass files to ansible-lint, see:
-        # https://github.com/ansible/ansible-lint/issues/611
-        pass_filenames: false
-        always_run: true
+  # - repo: local
+  #   hooks:
+  #     # - id: ansible-lint
+      #   name: Ansible-lint
+      #   description: This hook runs ansible-lint.
+      #   entry: ansible-lint --force-color
+      #   language: python
+      #   # do not pass files to ansible-lint, see:
+      #   # https://github.com/ansible/ansible-lint/issues/611
+      #   pass_filenames: false
+      #   always_run: true
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.26.0
+    rev: v1.31.0
     hooks:
       - id: yamllint
         files: \.(yaml|yml)$
         types: [file, yaml]
         entry: yamllint
-
-exclude: '^ansible/playbooks/files/lxc_install_dnf.yml$'

@@ -1,0 +1,39 @@
+---
+- include_vars: common-network.yml
+
+- name: Remove cloud-init cruft
+  ignore_errors: true
+  community.general.nmcli:
+    state: absent
+    conn_name: "{{ item }}"
+  loop:
+    - cloud-init enp6s0
+    - cloud-init enp7s0
+    - cloud-init enp8s0
+    - cloud-init enp9s0
+
+- name: Create network bridges
+  community.general.nmcli:
+    stp: true
+    type: bridge
+    conn_name: "{{ 'Bridge-' + item.key }}"
+    state: present
+    ifname: "{{ network_bridges[item.key] }}"
+    method4: manual
+    ip4: "{{ network_cidrs[item.key] | ansible.utils.ipmath(host_cidr_octets[inventory_hostname]) }}/{{ network_cidrs[item.key] | split('/') | last }}"
+    method6: ignore
+    autoconnect: true
+  loop: "{{ network_interfaces[inventory_hostname] | dict2items }}"
+
+- name: Enslave network interfaces to bridges
+  community.general.nmcli:
+    type: bridge-slave
+    conn_name: "{{ 'Slave-' + item.value }}"
+    state: present
+    ifname: "{{ item.value }}"
+    master: "{{ network_bridges[item.key] }}"
+    autoconnect: true
+    mtu: 1450
+    method4: manual
+    hairpin: false
+  loop: "{{ network_interfaces[inventory_hostname] | dict2items }}"

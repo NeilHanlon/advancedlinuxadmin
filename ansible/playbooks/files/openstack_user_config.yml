@@ -5,16 +5,17 @@ cidr_networks:
   storage: 172.29.228.0/22
 
 used_ips:
-  - "172.29.220.1,172.29.220.50"
-  - "172.29.224.1,172.29.224.50"
-  - "172.29.228.1,172.29.228.50"
+  - "172.29.220.1"
+  - "172.29.224.1"
+  - "172.29.228.1"
+  - "172.29.232.1"
 
 
 global_overrides:
   # The internal and external VIP should be different IPs, however they
   # do not need to be on separate networks.
-  external_lb_vip_address: 172.29.220.10
-  internal_lb_vip_address: 172.29.220.11
+  external_lb_vip_address: 172.29.220.100
+  internal_lb_vip_address: "{{ bootstrap_host_public_address | default(ansible_facts['default_ipv4']['address']) }}"
   management_bridge: "br-mgmt"
   provider_networks:
     - network:
@@ -27,6 +28,14 @@ global_overrides:
           - all_containers
           - hosts
         is_container_address: true
+    - network:
+        container_bridge: "br-external"
+        container_type: "veth"
+        container_interface: "eth12"
+        type: "flat"
+        net_name: "external"
+        group_binds:
+          - neutron_linuxbridge_agent
     - network:
         container_bridge: "br-vxlan"
         container_type: "veth"
@@ -52,13 +61,15 @@ global_overrides:
 
 x-infra-hosts: &x-infra-hosts
   infra1:
-    ip: 172.29.220.5
+    ip: 172.29.220.10
 x-compute-hosts: &x-compute-hosts
   compute1:
-    ip: 172.29.220.6
+    ip: 172.29.220.20
+  compute2:
+    ip: 172.29.220.21
 x-storage-hosts: &x-storage-hosts
   storage1:
-    ip: 172.29.220.7
+    ip: 172.29.220.30
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
@@ -66,7 +77,7 @@ x-storage-hosts: &x-storage-hosts
           volume_group: cinder-volumes
           volume_driver: cinder.volume.drivers.lvm.LVMVolumeDriver
           volume_backend_name: LVM_iSCSI
-          iscsi_ip_address: "172.29.228.7"
+          iscsi_ip_address: "172.29.228.10"
 
 ##
 ## Infrastructure

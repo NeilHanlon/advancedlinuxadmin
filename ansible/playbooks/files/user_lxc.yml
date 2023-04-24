@@ -4,4 +4,4 @@ lxc_hosts_container_build_command: "dnf --assumeyes --installroot=/var/lib/machi
 lxc_container_map:
   distro: "{{ hostvars[physical_host]['ansible_facts']['distribution'] | lower }}"
   arch: "{{ lxc_architecture_mapping.get( hostvars[physical_host]['ansible_facts']['architecture'] | lower ) }}"
-  release: "{{ hostvars[pyhsical_host]['ansible_facts']['distribution_major_version'] }}"
+  release: "{{ hostvars[physical_host]['ansible_facts']['distribution_major_version'] }}"

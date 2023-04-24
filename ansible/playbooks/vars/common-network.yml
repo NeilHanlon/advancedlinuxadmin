@@ -1,0 +1,37 @@
+---
+network_interfaces:
+  infra1:
+    management: enp7s0
+    tunnel: enp6s0
+    storage: enp8s0
+    external: enp9s0
+  compute1:
+    management: enp6s0
+    tunnel: enp7s0
+    storage: enp8s0
+    external: enp9s0
+  compute2:
+    management: enp7s0
+    tunnel: enp6s0
+    storage: enp8s0
+    external: enp9s0
+  storage1:
+    management: enp7s0
+    storage: enp6s0
+network_bridges:
+  management: br-mgmt
+  tunnel: br-tunnel
+  storage: br-storage
+  external: br-ext
+network_cidrs:
+  management: 172.29.220.0/22
+  tunnel: 172.29.224.0/22
+  storage: 172.29.228.0/22
+  external: 172.29.232.0/22
+host_cidr_octets:
+  infra1: 10
+  infra2: 11
+  compute1: 20
+  compute2: 21
+  storage1: 30
+  storage2: 31

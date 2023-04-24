@@ -2,8 +2,10 @@
 # Installs everything on hosts
 #
 - name: Bootstrap nodes for distributed OSA installation
-  hosts: "{{ host | default('infra1,compute1,storage1') }}"
+  hosts: "{{ host | default('infra1,compute1,compute2,storage1') }}"
   become: true
+
+  vars:
 
   handlers:
     - import_tasks: handlers/main.yml
@@ -26,19 +28,37 @@
 
   tasks:
     - name: Initialize nodes
-      import_tasks: tasks/init-nodes.yml
+      tags:
+        - init
+      args:
+        apply:
+          tags:
+            - init
+      include_tasks: tasks/init-nodes.yml
 
     - name: Reboot
       import_tasks: tasks/reboot.yml
       when: reboot | default(true) | bool
 
     - name: Setup infra hosts
-      import_tasks: tasks/infra-host.yml
-      when: tag.find("infra") != -1 or aio_install  | default(false) | bool # when on an infra tagged host
+      include_tasks: tasks/infra-host.yml
+      tags:
+        - infrastructure
+      args:
+        apply:
+          tags:
+            - infrastructure
+      when: tag.find("infra") != -1 or aio_install  | default(false) | bool
 
     - name: Setup storage hosts
-      import_tasks: tasks/storage-host.yml
-      when: tag.find("storage") != -1 # when on an storage tagged host
+      include_tasks: tasks/storage-host.yml
+      tags:
+        - storage
+      args:
+        apply:
+          tags:
+            - storage
+      when: tag.find("storage") != -1
 
   post_tasks:
     - name: Touching run file that ansible has ran here
